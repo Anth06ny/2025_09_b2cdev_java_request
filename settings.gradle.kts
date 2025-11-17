@@ -1,0 +1,1 @@
+rootProject.name = "2025_09_b2cdev_java_request"
