@@ -1,5 +1,8 @@
 package org.example.repository.ui;
 
+import org.example.repository.WeatherRepository;
+import org.example.repository.entity.WeatherBean;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,9 +21,9 @@ public class WeatherUI extends JFrame {
         jbPositive = new JButton("Chercher");
         jlQuestion = new JLabel("Donne une ville : ");
         jtfAnswer = new JTextField(5);
-        jlMessage = new JLabel("Ici pour écrire un message");
+        jlMessage = new JLabel("");
         progressBar = new JProgressBar();
-        progressBar.setVisible(true);
+        progressBar.setVisible(false);
         progressBar.setIndeterminate(true);
 
 
@@ -51,7 +54,22 @@ public class WeatherUI extends JFrame {
 
         //clic
         jbPositive.addActionListener(e -> {
-            jlMessage.setText("coucou");
+
+            progressBar.setVisible(true);
+
+            new Thread(() -> {
+                try {
+                    WeatherBean res = WeatherRepository.loadWeather(jtfAnswer.getText());
+                    jlMessage.setText(String.format("Il fait %s° à %s avec un vent de %skm/h%n",
+                            res.getMain().getTemp(), res.getName(), res.getWind().getSpeed()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+
+                    jlMessage.setText(ex.getMessage());
+                } finally {
+                    progressBar.setVisible(false);
+                }
+            }).start();
         });
     }
 

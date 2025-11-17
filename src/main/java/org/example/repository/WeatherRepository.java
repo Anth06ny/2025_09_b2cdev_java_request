@@ -24,6 +24,7 @@ public class WeatherRepository {
 
     public static WeatherBean loadWeather(String city) throws Exception {
         //Requete
+        Thread.sleep(2000);
         var json = sendGet("https://api.openweathermap.org/data/2.5/weather?appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr&q=" + city);
         //Parsing avec GSON
         WeatherBean res = new Gson().fromJson(json, WeatherBean.class);
