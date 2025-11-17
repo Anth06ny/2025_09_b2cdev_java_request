@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -9,20 +10,25 @@ import java.io.IOException;
 
 public class WeatherRepository {
 
+
     public static void main(String[] args) {
         try {
-            var res =  WeatherRepository.loadWeather("Nice");
-            System.out.println(res);
+            var res = WeatherRepository.loadWeather("Nice");
+            System.out.printf("Il fait %s° à %s avec un vent de %skm/h%n",
+                    res.getMain().getTemp(), res.getName(), res.getWind().getSpeed()
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static WeatherBean loadWeather(String city) throws Exception {
-           //Requete
-           //Parsing avec GSON
-           //Retourner le resultat
-        return null;
+        //Requete
+        var json = sendGet("https://api.openweathermap.org/data/2.5/weather?appid=b80967f0a6bd10d23e44848547b26550&units=metric&lang=fr&q=" + city);
+        //Parsing avec GSON
+        WeatherBean res = new Gson().fromJson(json, WeatherBean.class);
+        //Retourner le resultat
+        return res;
     }
 
     public static String sendGet(String url) throws Exception {
